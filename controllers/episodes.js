@@ -1,34 +1,40 @@
-const Celeb = require('../models/celebs');
+const Episode = require('../models/episodes');
 
-exports.postNewCeleb = (req, res) => {
+exports.postNewEpisode = (req, res) => {
   let {
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia,
+    seriesName,
+    title,
+    posterUrl,
+    season,
+    description,
+    director,
+    stars,
+    storyline,
+    genres,
     createdAt,
     modifiedAt
   } = req.body;
 
-  var celeb = new Celeb({
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia,
+  var episode = new Episode({
+    seriesName,
+    title,
+    posterUrl,
+    season,
+    description,
+    director,
+    stars,
+    storyline,
+    genres,
     createdAt,
     modifiedAt
   });
-  celeb.save().then((newCeleb) => {
+  episode.save().then((newEpisode) => {
     console.log('Added successfully');
     res.json({
-      message: `Added ${newCeleb.title} successfully`,
+      message: 'Added ${newEpisode.title} successfully',
       status: 200
     });
-  }).catch(function (err) {
+  }).catch(function(err) {
     if (err) {
       console.log(err);
       res.json({
@@ -39,24 +45,24 @@ exports.postNewCeleb = (req, res) => {
   });
 };
 
-exports.getAllCelebs = (req, res) => {
-  var query = Movie.find()
+exports.getAllEpisodes = (req, res) => {
+  var query = Episode.find();
   if (req.query.name) {
     query.where({ title: req.query.name });
   }
   query.select('name -_id');
   query.limit(req.query.limit || 10);
-  query.exec((error, celebs) => {
+  query.exec((error, episodes) => {
     if (error) {
       res.json({
         message: "Server error, Please try after some time.",
         status: 500
       });
     }
-    if (celebs) {
+    if (episodes) {
       res.json({
-        data: celebs,
-        message: "All celebs fetched",
+        data: episodes,
+        message: "All episodes fetched",
         status: 200
       });
     } else {
@@ -68,18 +74,18 @@ exports.getAllCelebs = (req, res) => {
   });
 };
 
-exports.getCelebById = (req, res) => {
-  Celeb.findById(req.params.id, (err, celebs) => {
+exports.getEpisodeById = (req, res) => {
+  Episode.findById(req.params.id, (err, episodes) => {
     if (err) {
       res.json({
         message: "Server error, Please try after some time.",
         status: 500
       });
     }
-    if (celebs) {
+    if (episodes) {
       res.json({
-        data: celebs,
-        message: "Celeb data fetched successfully",
+        data: episodes,
+        message: "Episode data fetched successfully",
         status: 200
       });
     } else {
@@ -91,37 +97,43 @@ exports.getCelebById = (req, res) => {
   });
 };
 
-exports.updateCelebById = (req, res) => {
+exports.updateEpisodeById = (req, res) => {
   console.log(req.body);
   const {
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia
+    seriesName,
+    title,
+    posterUrl,
+    season,
+    description,
+    director,
+    stars,
+    storyline,
+    genres
   } = req.body;
-  Celeb.update({
+  Episode.update({
     _id: req.params.id
   }, {
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia
-  }, {}, (error, celeb) => {
+    seriesName,
+    title,
+    posterUrl,
+    season,
+    description,
+    director,
+    stars,
+    storyline,
+    genres
+  }, {}, (error, episode) => {
     if (error)
       res.json({
         error: error,
         status: 500
       });
     console.log(error);
-    res.json(celeb);
+    res.json(episode);
   });
 };
 
-exports.deleteCelebById  = (req, res) => {
+exports.deleteEpisodeById  = (req, res) => {
   User.findOneAndDelete({
     _id: req.params.id
   }, (error, deleteId) => {

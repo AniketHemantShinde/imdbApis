@@ -1,31 +1,29 @@
-const Celeb = require('../models/celebs');
+const Showtime = require('../models/showtimes');
 
-exports.postNewCeleb = (req, res) => {
+exports.postNewShowtime = (req, res) => {
   let {
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia,
+    theaterName,
+    movie,
+    address,
+    rating,
+    time,
     createdAt,
     modifiedAt
   } = req.body;
 
-  var celeb = new Celeb({
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia,
+  var shotime = new Showtime ({
+    theaterName,
+    movie,
+    address,
+    rating,
+    time,
     createdAt,
     modifiedAt
-  });
-  celeb.save().then((newCeleb) => {
+  })
+  showtime.save().then((showtime) => {
     console.log('Added successfully');
     res.json({
-      message: `Added ${newCeleb.title} successfully`,
+      message: "Added successfully",
       status: 200
     });
   }).catch(function (err) {
@@ -39,25 +37,23 @@ exports.postNewCeleb = (req, res) => {
   });
 };
 
-exports.getAllCelebs = (req, res) => {
-  var query = Movie.find()
-  if (req.query.name) {
-    query.where({ title: req.query.name });
-  }
-  query.select('name -_id');
-  query.limit(req.query.limit || 10);
-  query.exec((error, celebs) => {
+exports.getAllShowtimes = (req, res) => {
+  Showtime.find({}, (error, shotimes) => {
     if (error) {
       res.json({
         message: "Server error, Please try after some time.",
         status: 500
       });
     }
-    if (celebs) {
+    if (showtimes) {
       res.json({
-        data: celebs,
-        message: "All celebs fetched",
-        status: 200
+        data: showtimes,
+        message: "All showtimes fetched",
+        status: 200,
+        pagination:{
+          limit: req.query.limit || 10,
+          page: 1
+        }
       });
     } else {
       res.json({
@@ -68,18 +64,18 @@ exports.getAllCelebs = (req, res) => {
   });
 };
 
-exports.getCelebById = (req, res) => {
-  Celeb.findById(req.params.id, (err, celebs) => {
+exports.getShowtimeById = (req, res) => {
+  Showtime.findById(req.params.id, (err, showtimes) => {
     if (err) {
       res.json({
         message: "Server error, Please try after some time.",
         status: 500
       });
     }
-    if (celebs) {
+    if (showtimes) {
       res.json({
-        data: celebs,
-        message: "Celeb data fetched successfully",
+        data: showtimes,
+        message: "Showtime data fetched successfully",
         status: 200
       });
     } else {
@@ -90,39 +86,36 @@ exports.getCelebById = (req, res) => {
     }
   });
 };
-
-exports.updateCelebById = (req, res) => {
+exports.updateShowtimeById = (req, res) => {
   console.log(req.body);
   const {
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia
+    theaterName,
+    movie,
+    address,
+    rating,
+    time
   } = req.body;
-  Celeb.update({
+  Showtime.update({
     _id: req.params.id
   }, {
-    name,
-    picurl,
-    dob,
-    height,
-    bio,
-    trivia
-  }, {}, (error, celeb) => {
+    theaterName,
+    movie,
+    address,
+    rating,
+    time
+  }, {}, (error, showtime) => {
     if (error)
       res.json({
         error: error,
         status: 500
       });
     console.log(error);
-    res.json(celeb);
+    res.json(showtime);
   });
 };
 
-exports.deleteCelebById  = (req, res) => {
-  User.findOneAndDelete({
+exports.deleteShowtimeById = (req, res) => {
+  Showtime.findOneAndDelete({
     _id: req.params.id
   }, (error, deleteId) => {
     if (error)
